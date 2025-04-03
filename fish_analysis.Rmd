@@ -1,0 +1,14 @@
+---
+title: "Fish Analysis"
+author: "Cameron Crowder"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Fish Length Analysis
+
+Analyze fish length data from Gaeta et al.
