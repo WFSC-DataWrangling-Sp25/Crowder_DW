@@ -163,7 +163,10 @@ b.  Write a function called `get_height_from_weight` that takes three arguments,
 c.  The function in (b) assumes that the weight is provided in grams. Use the functions from (3a) and (3b) in combination to estimate the height for an animal that weighs 2 pounds using the default value for `a`, but changing the value for `b` to 0.32.
 
     ```{r}
+    library(tidyverse)
 
+    convert_pounds_to_grams(2) %>% 
+      get_height_from_weight(., a = 12, b = 0.32)
     ```
 
 ### 4. Default Arguments (15 points)
@@ -175,7 +178,21 @@ Allowing `a` and `b` to be passed as arguments to `get_mass_from_length()` made 
 Rewrite your `get_mass_from length()` function from Question 2 so that its arguments have default values of `a = 39.9` and `b = 2.6` (the average values from [Seebacher 2001](http://www.jstor.org/stable/4524171)).
 
 a.  Use this function to estimate the mass of a *Sauropoda* (`a = 214.44`, `b = 1.46`) that is 22 m long (by setting `a` and `b` when calling the function).
+
 b.  Use this function to estimate the mass of a dinosaur from an unknown taxonomic group that is 16m long. Only pass the function `length`, not `a` and `b`, so that the default values are used.
+
+    ```{r}
+    get_mass_from_length <- function(length, a = 39.9, b = 2.6){
+      mass <- a * length ^ b
+      return(mass)
+    }
+
+    #a
+    get_mass_from_length(22, a = 214.44, b = 1.46)
+
+    #b
+    get_mass_from_length(16)
+    ```
 
 ### 5. Combining Functions (20 points)
 
@@ -186,6 +203,16 @@ Measuring things using the metric system is the standard approach for scientists
 Write a function called `convert_kg_to_pounds` that converts kilograms into pounds (`pounds = 2.205 * kg`).
 
 Use that function and your `get_mass_from_length()` function from Question 4 to estimate the weight, in pounds, of a 12 m long Stegosaurus with `a = 10.95` and `b = 2.64` (The estimated `a` and `b` values for *Stegosauria* from [Seebacher 2001](http://www.jstor.org/stable/4524171)).
+
+```{r}
+convert_kg_to_pounds <- function(kg){
+  pounds = 2.205*kg
+  return(pounds)
+}
+
+get_mass_from_length(12, 10.95, 2.64) %>% 
+  convert_kg_to_pounds()
+```
 
 ### 6. Writing Tidyverse Functions (20 points)
 
@@ -215,6 +242,36 @@ c.  Create a new function based on the function you created in (a); in this new 
 
     Remake the same plot as from (b) using your new function. Save your plot as a .png file using `ggsave()` in the appropriate sub-directory.
 
+    ```{r}
+    #a
+    df6a <- function(data, column_color){
+      ggplot(data) +
+        geom_point(size = 3, aes(x = area, y = count, color = {{column_color}})) + 
+        labs(x = "Area [ha]", y = "Number of Individuals")
+    }
+
+    df6a(count_data, state)
+    ggsave("../Images/df6a.png")
+    #b
+    df6b <- function(data, column_color){
+      ggplot(data) +
+        geom_point(size = 3, aes(x = area, y = count, color = {{column_color}})) + 
+        labs(x = "Area [ha]", y = "Number of Individuals")
+    }
+
+    df6b(count_data, site)
+    ggsave("../Images/df6a.png")
+    #c
+    df6c <- function(data, x_axis_column, y_axis_column, column_color, x_axis_label, y_axis_label){
+      ggplot(data) +
+        geom_point(size = 3, aes(x = {{x_axis_column}}, y = {{y_axis_column}}, color = {{column_color}} )) + 
+        labs(x = x_axis_label, y = y_axis_label)
+    }
+
+    df6c(count_data, area, count, state, "Area [ha]", "Number of Individuals")
+    ggsave("../Images/df6c.png")
+    ```
+
 ### 7. Portal Species Time-Series Challenge (OPTIONAL)
 
 If surveys.csv, species.csv, and plots.csv are not available in your workspace download them (modify the `destfile` arguments to point to the correct sub-directory):
@@ -226,6 +283,11 @@ download.file(url = "https://ndownloader.figshare.com/files/3299474",
   destfile = "plots.csv")
 download.file(url = "https://ndownloader.figshare.com/files/3299483",
   destfile = "species.csv")
+
+surveys <-  read_csv("surveys.csv")
+plots <- read_csv("plots.csv")
+species <- read_csv("species.csv")
+
 ```
 
 a.  Write a function that does the following:
@@ -244,6 +306,20 @@ b.  Use your function, and the data in `surveys.csv` and `species.csv`, to plot 
 c.  Use your function, and the data in `surveys.csv` and `species.csv`, to plot the time-series for `time = month`, `genus_name = "Chaetodipus"` and `species_name = "penicillatus"` (this plot will show the average seasonal pattern of *Chaetodipus penicillatus* abundances)
 
 d.  Use your function, and the data from `plots.csv`, `surveys.csv` and `species.csv`, to plot the time-series for `time = year`, `genus_name = "Chaetodipus"` and `species_name = "baileyi"` only on the "Control" plots.
+
+    ```{r}
+    #a
+    df7a <- function(){
+      
+    }
+
+    df7a <- function(genus_name, species_name){
+      surveys %>% 
+        bind_rows(plots, species) %>% 
+        ggplot(animals, aes(x = {{year}}, y = {{}}))
+    }
+
+    ```
 
 ## Turning in Your Assignment
 
