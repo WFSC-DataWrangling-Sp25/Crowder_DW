@@ -55,14 +55,35 @@ dna2 <- "attattaggaacaca"
 Using the variables above, write code that determines whether the following statements are `TRUE` or `FALSE`.
 
 a.  `w` is greater than 10
+
 b.  `"green"` is in `colors`
+
 c.  `x` is greater than `y`
+
 d.  Each value in `masses` is greater than 40.
+
 e.  `dna1` is the same as `dna2`
+
 f.  `dna1` is not the same as `dna2`
+
 g.  `w` is greater than `x`, or `y` is greater than `z`
+
 h.  `x` times `w` is between 13.2 and 13.5
+
 i.  Each mass in `masses` is between 30 and 50.
+
+    ```{r}
+    #a
+    w>10
+    "green" %in% colors
+    x > y
+    masses > 40
+    dna1 == dna2
+    !(dna1 == dna2)
+    w>y|x>z
+    x*w >= 13.2 & x*w <= 13.5
+    masses >= 30 & masses <= 50
+    ```
 
 ### 2. If Statements (20 points)
 
@@ -70,18 +91,21 @@ a.  Complete the following `if` statement so that if `age_class` is equal to "sa
 
 ```{r}
 age_class = "sapling"
-if (){
-  
+if (age_class == "sapling"){
+  y <- 10
 }
 y
+
 ```
 
 b.  Complete the following `if` statement so that if `age_class` is equal to "sapling" it sets `y <- 10` and if `age_class` is equal to "seedling" it sets `y <- 5`.
 
 ```{r}
 age_class = "seedling"
-if (){
-  
+if (age_class == "sapling"){
+  y <- 10
+} else if (age_class== "seedling"){
+  y <- 5
 }
 y
 ```
@@ -89,24 +113,91 @@ y
 c.  Complete the following `if` statement so that if `age_class` is equal to "sapling" it sets `y <- 10` and if `age_class` is equal to "seedling" it sets `y <- 5` and if `age_class` is something else then it sets the value of `y <- 0`.
 
 ```{r}
-age_class = "adult"
-if (){
-  
+
+if (age_class == "sapling"){
+  y <- 10
+} else if (age_class == "seedling"){
+  y <- 5
+} else{
+  y <- 0
 }
-y
+  y
 ```
 
 d.  Convert your conditional statement from (c) into a function that takes `age_class` as an argument and returns `y`. Call this function 5 times, once with each of the following values for `age_class`: "sapling", "seedling", "adult", "mature", "established".
 
+    ```{r}
+    df2d <- function(age_class){
+      if(age_class == "sapling"){
+        y <- 10
+      } else if (age_class == "seedling"){
+        y <- 5
+      } else if (age_class == "adult"){
+        y <- 0
+      } else if (age_class == "mature"){
+        y <- 0
+      } else if (age_class == "established"){
+        y <- 0
+      }
+      return(y)
+    }
+    df2d("sapling")
+    df2d("seedling")
+    df2d("adult")
+    df2d("mature")
+    df2d("established")
+    ```
+
 ### 3. If Statements in Functions (20 points)
 
 a.  Write a function named `double_if_small` that takes a number as input and returns the number multiplied by 2 if the input is less than 26 and returns just the number (not multiplied by two) if the input is greater than or equal to 26.
+
 b.  Call the function from (b) with `10` as the input.
+
 c.  Call the function from (b) with `30` as the input.
+
 d.  Write a function called `prediction` that takes a single argument `x`. If `x` is both greater than 0 and less than 15 then return `y = 6 + 0.8 * x`. If `x` is both greater than 15 and less than 30 then return `y = 5 + 0.75 * x`. In all other cases return `y = NA`.
+
 e.  Call the function from (d) with `5` as the input.
+
 f.  Call the function from (d) with `26` as the input.
+
 g.  Call the function from (d) with `-2` as the input.
+
+    ```{r}
+    #a
+    double_if_small <- function(number){
+      if(number < 26){
+        output <- number * 2
+      } else if (number > 26){
+        output <- number
+      }
+      return(output)
+    }
+
+    #b
+    double_if_small(10)
+    #c
+    double_if_small(30)
+    #d
+    prediction <- function(x){
+      if(x>0 & x<15){
+        y = 6 + 0.8 * x
+      }else if (x>15 & x<30){
+        y = 5 + 0.75 * x
+      }else{
+        y = NA
+      }
+      return(y)
+    }
+    #e
+    prediction(5)
+    #f
+    prediction(26)
+    #g
+    prediction(-2)
+
+    ```
 
 ### 4. Size Estimates by Name (20 points)
 
@@ -118,7 +209,7 @@ Remember the general form of the equation is:
 
 | mass \<- a \* length \^ b
 
-Create a new function `get_mass_from_length_by_name()` that takes two arguments: the `length` and the name of the dinosaur group. 
+Create a new function `get_mass_from_length_by_name()` that takes two arguments: the `length` and the name of the dinosaur group.
 
 Inside this function use `if`/`else if`/`else` statements to check to see if the name is one of the following values and if so use the associated `a` and `b` values to estimate the species mass using these equations:
 
@@ -128,16 +219,51 @@ Inside this function use `if`/`else if`/`else` statements to check to see if the
 
 If the name is not any of these values the function should return `NA`.
 
-Run the function for the following: 
+Run the function for the following:
 
-a.  A *Stegosauria* that is 10 meters long. 
-b.  A *Theropoda* that is 8 meters long. 
-c.  A *Sauropoda* that is 12 meters long. 
+a.  A *Stegosauria* that is 10 meters long.
+
+b.  A *Theropoda* that is 8 meters long.
+
+c.  A *Sauropoda* that is 12 meters long.
+
 d.  An *Ankylosauria* that is 13 meters long.
+
+    ```{r}
+    get_mass_from_length_by_name <- function(name, length){
+      if(name == "Stegosauria"){
+        mass = 10.95 * length^2.64
+      }else if (name == "Theropoda"){
+        mass = 0.73 * length^3.63
+      }else if (name == "Sauropoda"){
+        mass = 214.44 * length^1.46
+      }else{
+        mass = NA
+      }
+      return(mass)
+    }
+
+    #a
+    get_mass_from_length_by_name("Stegosauria", 10)
+    #b
+    get_mass_from_length_by_name("Theropoda", 8)
+    #c
+    get_mass_from_length_by_name("Sauropoda", 12)
+    #d
+    get_mass_from_length_by_name("Ankylosauria", 13)
+    ```
 
 *Challenge 1 (optional)*: If the name is not one of values that have a and b values print warning that it doesn’t know how to convert that group that includes that groups name in a message like “No known estimation for Ankylosauria.” You can use the function `warning("your warning text")` to print a warning and the function `paste()` to combine text with a value from a variable such as `paste("My name is", name)`. Doing this successfully will modify your answer to (d), which is fine.
 
-*Challenge 2 (optional)*: Change your function so that it uses two different values of `a` and `b` for _Stegosauria_. When _Stegosauria_ is greater than 8 meters long use the equation above. When it is less than 8 meters long, use `a = 8.5` and `b = 2.8`. Run the function for a _Stegosauria_ that is 6 meters long.
+*Challenge 2 (optional)*: Change your function so that it uses two different values of `a` and `b` for *Stegosauria*. When *Stegosauria* is greater than 8 meters long use the equation above. When it is less than 8 meters long, use `a = 8.5` and `b = 2.8`. Run the function for a *Stegosauria* that is 6 meters long.
+
+```{r}
+#Challenge 1
+
+#Challenge 2
+
+
+```
 
 ### 5. Using `dplyr` Choice Functions (20 points)
 
@@ -160,3 +286,46 @@ d.  Take a look at the `pie_crab` dataset from the `lterdatasampler` package by 
 e.  Now use the `case_when` function inside a `mutate` function to create a new column called `size_category3` in the `pie_crab` dataframe that meets the same conditions as (b) and (c).
 
     I've placed my new column next to the size column for the sake of the answer key; you don't need to do this.
+
+```{r}
+library(tidyverse)
+
+crab_size <- 17
+
+#a
+crab_size5a <- function(crab_size){
+  if(crab_size>=20){
+    size <-  "large"
+  }else if (crab_size<20){
+    size <-  "small"
+  }
+  return(size)
+}  
+crab_size5a(crab_size)
+#b
+crab_size <- 17
+crab_size5b <- function(crab_size){
+  if_else(crab_size >20, "large",
+          if_else(crab_size <20 & crab_size>10, "medium", "small"))
+}
+crab_size5b(crab_size)
+
+#c
+crab_size <- 17
+case_when(crab_size >20 ~ "large",
+          crab_size <20 & crab_size>=10 ~ "medium",
+          crab_size <10 ~ "small")
+#d
+crab_size <- 17
+library(lterdatasampler)
+head(pie_crab)
+
+pie_crab %>% 
+  mutate(size_category = if_else(size >20, "large",
+                         if_else(size <20 & size>10, "medium", "small")))
+#e
+pie_crab %>% 
+  mutate(size_category3 = case_when(size >20 ~ "large",
+                                   size <20 & size >=10 ~ "medium",
+                                   size <10 ~ "small"))
+```
