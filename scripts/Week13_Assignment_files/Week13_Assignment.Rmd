@@ -225,7 +225,7 @@ This question has you write a function and then use the function in various form
 a.  Write a function that determines if a sequence of base pairs is DNA, RNA, or if it is not possible to tell given the sequence provided. RNA has the base Uracil ("u") instead of the base Thymine ("t"), so sequences with u’s are RNA, sequences with t’s are DNA, and sequences with neither are unknown.
 
     ```{r}
-    library(tidyverse)
+    # library(tidyverse)
     dna_or_rna <- function(sequence){
       if (str_detect(sequence, "u")) {
         output = "RNA"
