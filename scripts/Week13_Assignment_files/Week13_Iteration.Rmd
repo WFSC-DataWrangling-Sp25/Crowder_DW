@@ -484,17 +484,17 @@ We also want to store the file name and the minimum latitude in a similar fashio
 
 ```{r}
 for (i in 1:num_files){
-  #specify file
+ #specify file
   filename <- data_files[i]
   data <- read.csv(paste0("../Week13_Assignment_files/", filename)) 
-  
+
   #adding info to the results dataframe
   results$file_name[i] <- filename
   results$count[i] <- nrow(data)
   results$min_lat[i] <- min(data$lat)
 }
 
-results
+results 
 ```
 
 > Work on the rest of the assignment.
