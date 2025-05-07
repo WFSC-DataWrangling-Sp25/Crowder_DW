@@ -317,7 +317,7 @@ case_when(crab_size >20 ~ "large",
           crab_size <10 ~ "small")
 #d
 crab_size <- 17
-library(lterdatasampler)
+# library(lterdatasampler)
 head(pie_crab)
 
 pie_crab %>% 
