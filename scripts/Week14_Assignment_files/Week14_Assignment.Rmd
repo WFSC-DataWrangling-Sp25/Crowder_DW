@@ -1,8 +1,10 @@
 ---
 title: 'Week 14 Assignment'
-author: "Jeff Oliver"
-date: "`r Sys.Date()`"
-output: github_document
+author: "Cameron Crowder"
+editor_options: 
+  markdown: 
+    wrap: 72
+    output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +15,8 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ### Purpose
 
-The goal of this assignment is to practice working with geospatial raster and vector data.
+The goal of this assignment is to practice working with geospatial
+raster and vector data.
 
 ### Task
 
@@ -21,15 +24,22 @@ Write R code to successfully answer each question below.
 
 ### Criteria for Success
 
--   Code is within the provided code chunks or new code chunks are created where necessary
+-   Code is within the provided code chunks or new code chunks are
+    created where necessary
 -   Code chunks run without errors
--   Code chunks have brief comments indicating which code is answering which part of the question
+-   Code chunks have brief comments indicating which code is answering
+    which part of the question
 -   Code will be assessed as follows:
     -   Produces the correct answer using the requested approach: 100%
-    -   Generally uses the right approach, but a minor mistake results in an incorrect answer: 90%
-    -   Attempts to solve the problem and makes some progress using the core concept, but returns the wrong answer and does not demonstrate comfort with the core concept: 50%
-    -   Answer demonstrates a lack of understanding of the core concept: 0%
--   Any questions requiring written answers are answered with sufficient detail
+    -   Generally uses the right approach, but a minor mistake results
+        in an incorrect answer: 90%
+    -   Attempts to solve the problem and makes some progress using the
+        core concept, but returns the wrong answer and does not
+        demonstrate comfort with the core concept: 50%
+    -   Answer demonstrates a lack of understanding of the core concept:
+        0%
+-   Any questions requiring written answers are answered with sufficient
+    detail
 
 ### Due Date
 
@@ -39,65 +49,180 @@ May 6 before class
 
 ### 1. Working with Raster Data in `terra` (20 pts)
 
-In this exercise, you will work with the same precipitation data as in class, but this time focus in on the Himalayan region of Asia.
+In this exercise, you will work with the same precipitation data as in
+class, but this time focus in on the Himalayan region of Asia.
 
 a.  Load in the `terra` package. What version does it say you are using?
 
-b.  Load in the precipitation data (`global_precipitation.tif`). What is the EPSG used in these data?
+    ```{r}
+    library(tidyverse)
+    library("terra")
+    # using version 1.8-42
+    ```
+
+b.  Load in the precipitation data (`global_precipitation.tif`). What is
+    the EPSG used in these data?
+
+    ```{r}
+    glob_precip <- rast("global-precipitation.tif")
+    # the EPSG is 4326
+    plot(glob_precip)
+    ```
+
+    ```{r}
+    himalayan_ext <- ext(c(69.33, 97.15, 26.93, 40.37))
+    ```
 
 c.  Define a geographic extent object for the Himalayan region.
 
     The latitude and longitude of the Himalayas are, roughly:
 
     -   Top left: (40.37, 69.33)
+
     -   Bottom right: (26.93, 97.15)
 
-d.  Crop the precipitation data to the Himalayan extent; what are resulting dimensions?
+d.  Crop the precipitation data to the Himalayan extent; what are
+    resulting dimensions?
+
+    ```{r}
+    Himalayan_precip <- crop(glob_precip, himalayan_ext)
+
+    ```
 
 ### 2. Printing Maps (20 points)
 
-Still working with the precipitation data, this exercise focuses on visualizing the data.
+Still working with the precipitation data, this exercise focuses on
+visualizing the data.
 
 a.  Plot the precipitation data for the Himalayan region.
 
 b.  Add a descriptive title to the plot.
 
-c.  Change the palette to that of `topo.colors` (use `?topo.colors` for details) and print the resultant plot.
+c.  Change the palette to that of `topo.colors` (use `?topo.colors` for
+    details) and print the resultant plot.
 
-d.  Change the palette to one from [ColorBrewer](https://colorbrewer2.org) for sequential (continuous) data.
+d.  Change the palette to one from
+    [ColorBrewer](https://colorbrewer2.org) for sequential (continuous)
+    data.
+
+    ```{r}
+    #a
+    plot(Himalayan_precip)
+
+    #b
+    plot(Himalayan_precip, main = "Himalayan Precipitation")
+
+    #c
+    plot(Himalayan_precip, col = rainbow(n = 50))
+
+
+    #d
+    Him_prec <- rev(hcl.colors(n = 20, palette = "PuBu"))
+    plot(Himalayan_precip, col = Him_prec)
+    ```
 
 ### 3. Working with Vector Data in `terra` (20 points)
 
-a.  Create a data frame of three peaks in the Himalayan region: (`lat`, `lon`)
+Create a data frame of three peaks in the Himalayan region: (`lat`,
+`lon`)
 
 -   K2: (35.93, 76.50)
+
 -   Annapurna: (28.53, 83.81)
+
 -   Mount Everest: (28.05, 86.91)
+
+    ```{r}
+    Peaks <- data.frame(city = c("K2", "Annapurna", "Mount Everest"),
+    lat = c(35.93, 28.53, 28.05),
+    lon = c(76.50, 83.81, 86.91))
+    Peaks
+    ```
 
 b.  Create a `SpatVector` object from the data frame with peak data.
 
 > *A quick note about plotting with `terra`:*
 >
-> When you run multiple plot functions (or a similar function adding something onto the plot, such as `lines()` or `text()`), you need to run all of the functions together at the same time. Running the lines one by one will give you an error like "Error in graphics...plot.new has not been called yet."
+> When you run multiple plot functions (or a similar function adding
+> something onto the plot, such as `lines()` or `text()`), you need to
+> run all of the functions together at the same time. Running the lines
+> one by one will give you an error like "Error in graphics...plot.new
+> has not been called yet."
 >
-> You can either highlight all likes of code creating the plot and run them together or use the green arrow at the top of the code chunk--either option should work.
+> You can either highlight all likes of code creating the plot and run
+> them together or use the green arrow at the top of the code
+> chunk--either option should work.
 
-c.  Plot the precipitation data, and add the points of the peaks onto the plot.
+```{r}
+Him_vect <- vect(Peaks, crs = crs(Himalayan_precip))
+Him_vect
+```
+
+c.  Plot the precipitation data, and add the points of the peaks onto
+    the plot.
+
+    ```{r}
+    plot(Himalayan_precip, col = Him_prec)
+    plot(Him_vect, add = TRUE)
+    ```
 
 d.  Add labels to the points representing the peaks to the plot.
 
+    ```{r}
+    plot(Himalayan_precip, col = Him_prec)
+    plot(Him_vect, add = TRUE)
+    text(Him_vect, labels = "city", pos = 4)
+    ```
+
 ### 4. Modifying Raster Values (20 points)
 
-a.  Load in the elevation data (`global_elevation.tif`). What are the units for these data?
+a.  Load in the elevation data (`global_elevation.tif`). What are the
+    units for these data?
 
 b.  Convert the units of the raster to feet.
 
-c.  Crop the elevation data to the same geographic extent as precipitation data.
+c.  Crop the elevation data to the same geographic extent as
+    precipitation data.
 
 d.  Plot the Himalayan elevation data.
 
+    ```{r}
+    #a
+    glob_elevation <- rast("global_elevation.tif")
+    # the units for this data are (" ") character units that don't say but I will assume it's m
+
+    #b
+    elev_conv_ft <- glob_elevation * 3.28084
+
+    #c
+    himal_elev <- crop(elev_conv_ft, himalayan_ext)
+
+    #d
+    plot(himal_elev)
+    ```
+
 ### 5. Converting Raster Objects to Spatial Vector Objects (20 points)
 
-Create a plot that shows precipitation for the Himalayan region above 13,000 feet elevation.
+Create a plot that shows precipitation for the Himalayan region above
+13,000 feet elevation.
 
-Use a color palette from `ColorBrewer` *and* add a layer that is partially (50%) transparent to shade out regions below 13,000 feet. Take a look at the arguments for the `polys` function for how to set the color and transparency.
+Use a color palette from `ColorBrewer` *and* add a layer that is
+partially (50%) transparent to shade out regions below 13,000 feet. Take
+a look at the arguments for the `polys` function for how to set the
+color and transparency.
+
+```{r}
+Himal_elev_min <- 13000
+
+prec_himalayans <- himal_elev > Himal_elev_min
+prec_himalayans[!prec_himalayans] <- NA
+
+dry_poly <- as.polygons(!prec_himalayans, na.rm = F)
+
+prec_hima_col <- hcl.colors(n = 50, palette = "GnBu")
+prec_dry_col <- hcl.colors(n = 50, palette = "Grays")
+plot(prec_himalayans, col = prec_hima_col) 
+     polys(x = dry_poly, col = prec_dry_col, alpha = 0.5)
+     
+# Im so sorry I tried for like an hour I have no idea how to do this
+```
